@@ -1,0 +1,57 @@
+version: 2
+
+seeds:
+  - name: roi_assumptions
+    description: >
+      Scenario-based assumptions used to project global ROI from the
+      RavingFan pilot results. Each row represents a scenario (conservative,
+      base, optimistic) with varying adoption rate and new hire volume
+      assumptions. All other inputs are derived from pilot data in
+      mart__engagement_lift and mart__engagement_segments.
+    columns:
+      - name: scenario
+        description: >
+          Scenario name. One of conservative, base, or optimistic.
+          Drives the adoption rate and new hire volume assumptions
+          used in mart__roi_projection.
+        tests:
+          - unique
+          - not_null
+
+      - name: global_rep_count
+        description: >
+          Total number of sales reps in a global Gong rollout. Fixed
+          at 5,000 across all scenarios per the exercise brief.
+        tests:
+          - not_null
+
+      - name: high_engagement_adoption_rate
+        description: >
+          Assumed proportion of global reps who reach high Gong engagement
+          following a full rollout. Varies by scenario: 0.40 conservative,
+          0.60 base, 0.80 optimistic.
+        tests:
+          - not_null
+
+      - name: new_hires_per_year
+        description: >
+          Assumed number of new hires per year globally. Used to calculate
+          onboarding ROI from faster ramp time. Varies by scenario: 400
+          conservative, 500 base, 600 optimistic.
+        tests:
+          - not_null
+
+      - name: working_days_per_year
+        description: >
+          Number of working days per year used to calculate average daily
+          revenue per rep. Fixed at 250 across all scenarios.
+        tests:
+          - not_null
+
+      - name: annualization_factor
+        description: >
+          Multiplier applied to Q4 deal count to estimate annual deal
+          volume per rep. Fixed at 4 across all scenarios (Q4 × 4 =
+          annual estimate). Flagged as an assumption in methodology.
+        tests:
+          - not_null

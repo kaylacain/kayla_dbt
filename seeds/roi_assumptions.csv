@@ -1,0 +1,4 @@
+scenario,global_rep_count,high_engagement_adoption_rate,new_hires_per_year,working_days_per_year,annualization_factor
+conservative,5000,0.40,400,250,4
+base,5000,0.60,500,250,4
+optimistic,5000,0.80,600,250,4
