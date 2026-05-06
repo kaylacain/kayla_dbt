@@ -42,7 +42,10 @@ joined as (
 metrics as (
 
     select
-        *
+        *,
+        avg_deal_size_post_period - avg_deal_size_pre_period as avg_deal_size_delta,
+        deal_count_post_period - deal_count_post_period as deal_count_delta,
+        revenue_post_period - revenue_pre_period as revenue_delta
 
     from joined
 
