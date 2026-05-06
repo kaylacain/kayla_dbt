@@ -2,13 +2,13 @@ with
 
 performance as (
 
-    select * from {{ ref('stg_gong_pilot__performance_data') }}
+    select * from {{ ref('stg__performance_data') }}
 
 ),
 
 gong as (
 
-    select * from {{ ref('stg_gong_pilot__gong_data') }}
+    select * from {{ ref('stg__gong_data') }}
 
 ),
 

@@ -1,6 +1,6 @@
 with base as (
 
-    select * from {{ ref('int_gong_pilot__rep_performance') }}
+    select * from {{ ref('int__rep_performance') }}
 
 ),
 
