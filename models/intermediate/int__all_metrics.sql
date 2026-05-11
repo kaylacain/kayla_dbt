@@ -12,7 +12,7 @@ composite as (
         rep_id,
         engagement_segment  -- 'High' / 'Low' from int__composite_metric
 
-    from {{ ref('int__composite_metric') }}
+    from {{ ref('int__composite_segment') }}
 
 ),
 
