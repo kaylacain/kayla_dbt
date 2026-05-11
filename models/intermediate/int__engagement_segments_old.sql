@@ -7,7 +7,11 @@ with base as (
 segmented as (
 
     select
-*,
+        rep_id,
+        avg_deal_size_post_period,
+        revenue_post_period,
+        deal_count_post_period,
+        days_to_first_deal,
         -- high/low flag for each signal based on median split
         case when manager_calls_listened >= percentile_cont(0.5) 
             within group (order by manager_calls_listened) over ()
@@ -42,13 +46,12 @@ segmented as (
 
 , coaching_lift as (
     select
-        'Manager Coaching'                                                   as engagement_signal,
-        coaching_segment                                            as segment,
-        sum(revenue_pre_period)                                     as total_revenue_pre_period,
-        sum(deal_count_pre_period)                                       as total_deal_count_pre_period,
-        avg(avg_deal_size_post_period/avg_deal_size_pre_period-1)       as avg_deal_size_lift_pct,
-        sum(revenue_post_period)/sum(revenue_pre_period)-1              as revenue_lift_pct,
-        sum(deal_count_post_period)/sum(deal_count_pre_period)-1        as deal_count_lift_pct,
+        'Manager Coaching'                  as engagement_signal,
+        coaching_segment                    as segment,
+        avg(avg_deal_size_post_period)      as avg_deal_size,
+        avg(revenue_post_period)            as avg_revenue,
+        avg(deal_count_post_period)         as avg_deal_count,
+        avg(days_to_first_deal)             as avg_days_to_first_deal,
         count(distinct rep_id)              as rep_count
     from segmented
     group by coaching_segment
@@ -58,11 +61,10 @@ peer_learning_lift as (
     select
         'Peer Learning'             as engagement_signal,
         peer_learning_segment       as segment,
-        sum(revenue_pre_period)                                     as total_revenue_pre_period,
-        sum(deal_count_pre_period)                                       as total_deal_count_pre_period,
-        avg(avg_deal_size_post_period/avg_deal_size_pre_period-1)       as avg_deal_size_lift_pct,
-        sum(revenue_post_period)/sum(revenue_pre_period)-1              as revenue_lift_pct,
-        sum(deal_count_post_period)/sum(deal_count_pre_period)-1        as deal_count_lift_pct,
+        avg(avg_deal_size_post_period)      as avg_deal_size,
+        avg(revenue_post_period)            as avg_revenue,
+        avg(deal_count_post_period)         as avg_deal_count,
+        avg(days_to_first_deal)             as avg_days_to_first_deal,
         count(distinct rep_id)              as rep_count
     from segmented
     group by peer_learning_segment
@@ -72,11 +74,10 @@ deal_board_lift as (
     select
         'Deal Board Views'          as engagement_signal,
         deal_board_segment          as segment,
-        sum(revenue_pre_period)                                     as total_revenue_pre_period,
-        sum(deal_count_pre_period)                                       as total_deal_count_pre_period,
-        avg(avg_deal_size_post_period/avg_deal_size_pre_period-1)       as avg_deal_size_lift_pct,
-        sum(revenue_post_period)/sum(revenue_pre_period)-1              as revenue_lift_pct,
-        sum(deal_count_post_period)/sum(deal_count_pre_period)-1        as deal_count_lift_pct,
+        avg(avg_deal_size_post_period)      as avg_deal_size,
+        avg(revenue_post_period)            as avg_revenue,
+        avg(deal_count_post_period)         as avg_deal_count,
+        avg(days_to_first_deal)             as avg_days_to_first_deal,
         count(distinct rep_id)              as rep_count
     from segmented
     group by deal_board_segment
@@ -86,11 +87,10 @@ interactivity_lift as (
     select
         'Interactivity Score'          as engagement_signal,
         interactivity_segment          as segment,
-        sum(revenue_pre_period)                                     as total_revenue_pre_period,
-        sum(deal_count_pre_period)                                       as total_deal_count_pre_period,
-        avg(avg_deal_size_post_period/avg_deal_size_pre_period-1)       as avg_deal_size_lift_pct,
-        sum(revenue_post_period)/sum(revenue_pre_period)-1              as revenue_lift_pct,
-        sum(deal_count_post_period)/sum(deal_count_pre_period)-1        as deal_count_lift_pct,
+        avg(avg_deal_size_post_period)      as avg_deal_size,
+        avg(revenue_post_period)            as avg_revenue,
+        avg(deal_count_post_period)         as avg_deal_count,
+        avg(days_to_first_deal)             as avg_days_to_first_deal,
         count(distinct rep_id)              as rep_count
     from segmented
     group by interactivity_segment
@@ -100,11 +100,10 @@ monologue_lift as (
     select
         'Monologue Length'          as engagement_signal,
         monologue_segment          as segment,
-        sum(revenue_pre_period)                                     as total_revenue_pre_period,
-        sum(deal_count_pre_period)                                       as total_deal_count_pre_period,
-        avg(avg_deal_size_post_period/avg_deal_size_pre_period-1)       as avg_deal_size_lift_pct,
-        sum(revenue_post_period)/sum(revenue_pre_period)-1              as revenue_lift_pct,
-        sum(deal_count_post_period)/sum(deal_count_pre_period)-1        as deal_count_lift_pct,
+        avg(avg_deal_size_post_period)      as avg_deal_size,
+        avg(revenue_post_period)            as avg_revenue,
+        avg(deal_count_post_period)         as avg_deal_count,
+        avg(days_to_first_deal)             as avg_days_to_first_deal,
         count(distinct rep_id)              as rep_count
     from segmented
     group by monologue_segment

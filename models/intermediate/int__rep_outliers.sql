@@ -20,8 +20,7 @@ quartiles as (
 
 flagged as (
     select
-        rep_id,
-        is_new_hire,
+        *,
 
         case
             when avg_deal_size_post_period > q3_deal_size + (1.5 * (q3_deal_size - q1_deal_size))
@@ -46,17 +45,22 @@ flagged as (
             when days_to_first_deal > q3_days + (1.5 * (q3_days - q1_days)) then true
             when days_to_first_deal < q1_days - (1.5 * (q3_days - q1_days)) then true
             else false
-        end as is_outlier_days_to_first_deal,
-
-        case
-            when is_outlier_deal_size = true
-            or is_outlier_revenue = true
-            or is_outlier_deal_count = true
-            or is_outlier_days_to_first_deal = true
-            then true else false
-        end as is_outlier
+        end as is_outlier_days_to_first_deal
 
     from quartiles
+),
+
+final as (
+    select
+        *,
+        case
+            when is_outlier_deal_size
+            or is_outlier_revenue
+            or is_outlier_deal_count
+            or is_outlier_days_to_first_deal
+            then true else false
+        end as is_outlier
+    from flagged
 )
 
-select * from flagged
+select * from final

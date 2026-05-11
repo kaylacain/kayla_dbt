@@ -2,7 +2,7 @@ with
 
 lift as (
 
-    select * from {{ ref('int__engagement_lift') }}
+    select * from {{ ref('int__engagement_lift_old') }}
     where engagement_signal = 'Manager Coaching'
 
 ),
@@ -19,7 +19,7 @@ base_metrics as (
         high_avg_revenue                 as avg_revenue_per_rep,
         high_avg_deal_count              as avg_deal_count_per_rep,
         high_avg_revenue / 250.0         as avg_daily_revenue_per_rep
-    from {{ ref('int__engagement_lift') }}
+    from {{ ref('int__engagement_lift_old') }}
     where engagement_signal = 'Manager Coaching'
 
 ),

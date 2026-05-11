@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: gong_pilot
+  - name: gong
     description: >
       Raw data from a Gong pilot deployment. Currently configured for
       RavingFan Inc.'s 3-month pilot across 1,000 sales reps in their
