@@ -2,7 +2,7 @@ with
 
 segments as (
 
-    select * from {{ ref('int__all_metrics') }}
+    select * from {{ ref('int__composite_segments_agg') }}
 
     --where not is_outlier
 

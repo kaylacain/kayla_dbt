@@ -2,7 +2,7 @@ with
 
 segments as (
 
-    select * from {{ ref('int__engagement_segments') }}
+    select * from {{ ref('int__engagement_segments_agg') }}
 
     --where not is_outlier
 

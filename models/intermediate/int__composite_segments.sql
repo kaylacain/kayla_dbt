@@ -14,13 +14,13 @@ final as (
         composite_score_raw,
         gong_engagement_score,
 
-        -- Median split: population-relative, distribution-agnostic
-        -- High = above median, Low = at or below
+        -- ntile(2) split: guarantees balanced High/Low segments
+        -- High = top half by composite score, Low = bottom half
+        -- rep_id as tiebreaker ensures deterministic assignment across runs
         -- ⚠️ Segment labels are relative to this deployment's population;
         --    cross-customer comparisons require re-baselining
         case
-            when gong_engagement_score > percentile_cont(0.5)
-                    within group (order by gong_engagement_score) over ()
+            when ntile(2) over (order by gong_engagement_score, rep_id) = 2
             then 'High'
             else 'Low'
         end                                                             as engagement_segment,
@@ -34,6 +34,25 @@ final as (
 
     from source
 
+),
+
+base as (
+
+    select * from {{ ref('int__rep_metrics') }}
+
+),
+
+
+joined as (
+
+    select
+        b.*,
+        f.engagement_segment,
+        f.gong_engagement_score
+
+    from base b
+    inner join final f on b.rep_id = f.rep_id
+
 )
 
-select * from final
+select * from joined
