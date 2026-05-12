@@ -16,6 +16,9 @@ pivoted as (
         max(case when segment = 'High' then total_revenue_pre_period end)       as high_total_revenue_pre_period,
         max(case when segment = 'Low' then total_revenue_pre_period end)        as low_total_revenue_pre_period,
 
+        max(case when segment = 'High' then total_revenue_post_period end)      as high_total_revenue_post_period,
+        max(case when segment = 'Low' then total_revenue_post_period end)       as low_total_revenue_post_period,
+
         max(case when segment = 'High' then total_deal_count_pre_period end)    as high_total_deal_count_pre_period,
         max(case when segment = 'Low' then total_deal_count_pre_period end)     as low_total_deal_count_pre_period,
 
@@ -26,7 +29,10 @@ pivoted as (
         max(case when segment = 'Low' then revenue_lift_pct end)                as low_revenue_lift_pct,
 
         max(case when segment = 'High' then deal_count_lift_pct end)            as high_deal_count_lift_pct,
-        max(case when segment = 'Low' then deal_count_lift_pct end)             as low_deal_count_lift_pct
+        max(case when segment = 'Low' then deal_count_lift_pct end)             as low_deal_count_lift_pct,
+
+        max(case when segment = 'High' then rep_count end)                      as high_rep_count,
+        max(case when segment = 'Low' then rep_count end)                       as low_rep_count
 
     from segments
     group by engagement_signal
@@ -37,8 +43,8 @@ incremental as (
 
     select
         *,
-        high_revenue_lift_pct - low_revenue_lift_pct                        as high_incremental_revenue_growth_pct,
-        high_deal_count_lift_pct - low_deal_count_lift_pct                  as high_incremental_deal_count_growth_pct
+        high_revenue_lift_pct - low_revenue_lift_pct                            as high_incremental_revenue_growth_pct,
+        high_deal_count_lift_pct - low_deal_count_lift_pct                      as high_incremental_deal_count_growth_pct
 
     from pivoted
 
@@ -46,9 +52,15 @@ incremental as (
 
 select
     engagement_signal,
+    high_rep_count,
+    low_rep_count,
     high_incremental_revenue_growth_pct,
-    high_total_revenue_pre_period * high_incremental_revenue_growth_pct     as high_incremental_revenue,
+    high_total_revenue_pre_period * high_incremental_revenue_growth_pct         as high_incremental_revenue,
     high_incremental_deal_count_growth_pct,
-    high_total_deal_count_pre_period * high_incremental_deal_count_growth_pct as high_incremental_deal_count
+    high_total_deal_count_pre_period * high_incremental_deal_count_growth_pct   as high_incremental_deal_count,
+    high_total_revenue_pre_period,
+    low_total_revenue_pre_period,
+    high_total_revenue_post_period,
+    low_total_revenue_post_period
 
 from incremental

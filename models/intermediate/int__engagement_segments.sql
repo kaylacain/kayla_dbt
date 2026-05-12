@@ -24,7 +24,7 @@ segmented as (
 
         case when ntile(2) over (order by peer_calls_listened, rep_id) = 2
             then 'High' else 'Low' end                              as peer_learning_segment,
-
+        
         case when ntile(2) over (order by deal_board_views, rep_id) = 2
             then 'High' else 'Low' end                              as deal_board_segment,
 
@@ -33,7 +33,10 @@ segmented as (
 
         -- Inverted: shorter monologue = better, so order ascending and flip
         case when ntile(2) over (order by longest_monologue_min desc, rep_id) = 2
-            then 'High' else 'Low' end                              as monologue_segment
+            then 'High' else 'Low' end                              as monologue_segment,
+
+        case when ntile(2) over (order by pitch_adoption_rate, rep_id) = 2
+            then 'High' else 'Low' end                              as pitch_adoption_segment
 
     from base
 

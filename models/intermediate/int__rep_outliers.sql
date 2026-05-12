@@ -23,27 +23,27 @@ flagged as (
         *,
 
         case
-            when avg_deal_size_post_period > q3_deal_size + (1.5 * (q3_deal_size - q1_deal_size))
-            or avg_deal_size_post_period < q1_deal_size - (1.5 * (q3_deal_size - q1_deal_size))
+            when avg_deal_size_post_period > q3_deal_size + (3 * (q3_deal_size - q1_deal_size))
+            or avg_deal_size_post_period < q1_deal_size - (3 * (q3_deal_size - q1_deal_size))
             then true else false
         end as is_outlier_deal_size,
 
         case
-            when revenue_post_period > q3_revenue + (1.5 * (q3_revenue - q1_revenue))
-            or revenue_post_period < q1_revenue - (1.5 * (q3_revenue - q1_revenue))
+            when revenue_post_period > q3_revenue + (3 * (q3_revenue - q1_revenue))
+            or revenue_post_period < q1_revenue - (3 * (q3_revenue - q1_revenue))
             then true else false
         end as is_outlier_revenue,
 
         case
-            when deal_count_post_period > q3_deal_count + (1.5 * (q3_deal_count - q1_deal_count))
-            or deal_count_post_period < q1_deal_count - (1.5 * (q3_deal_count - q1_deal_count))
+            when deal_count_post_period > q3_deal_count + (3 * (q3_deal_count - q1_deal_count))
+            or deal_count_post_period < q1_deal_count - (3 * (q3_deal_count - q1_deal_count))
             then true else false
         end as is_outlier_deal_count,
 
         case
             when is_new_hire = false then null
-            when days_to_first_deal > q3_days + (1.5 * (q3_days - q1_days)) then true
-            when days_to_first_deal < q1_days - (1.5 * (q3_days - q1_days)) then true
+            when days_to_first_deal > q3_days + (3 * (q3_days - q1_days)) then true
+            when days_to_first_deal < q1_days - (3 * (q3_days - q1_days)) then true
             else false
         end as is_outlier_days_to_first_deal
 

@@ -17,6 +17,8 @@ unpivoted as (
     select 'Interactivity Score' as engagement_signal, interactivity_segment     as segment, * from base
     union all
     select 'Monologue Length'    as engagement_signal, monologue_segment         as segment, * from base
+    union all
+    select 'Pitch Adoption Rate' as engagement_signal, pitch_adoption_segment    as segment, * from base
 
 )
 

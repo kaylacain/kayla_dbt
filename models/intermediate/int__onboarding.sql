@@ -15,7 +15,7 @@ with
     - Incremental revenue = (high_avg_rev - low_avg_rev) * high_rep_count
 */
 
-new_hires as (
+segmented as (
 
     select
         rep_id,
@@ -25,9 +25,11 @@ new_hires as (
         deal_count_pre_period,
         deal_count_post_period,
         avg_deal_size_pre_period,
-        avg_deal_size_post_period
+        avg_deal_size_post_period,
+         engagement_segment,       -- 'High' / 'Low'
+        gong_engagement_score     -- 0–1 normalized composite score
 
-    from {{ ref('int__rep_metrics') }}
+    from {{ ref('int__composite_segments') }}
     where
         is_new_hire
         and not is_outlier
@@ -35,17 +37,6 @@ new_hires as (
 
 ),
 
-segmented as (
-
-    select
-        n.*,
-        s.engagement_segment,       -- 'High' / 'Low'
-        s.gong_engagement_score     -- 0–1 normalized composite score
-
-    from new_hires n
-    inner join {{ ref('int__composite_segments') }} s using (rep_id)
-
-),
 
 /*
   Population-level baselines computed as window aggregates so they
@@ -66,7 +57,7 @@ with_baselines as (
 
         -- Days saved vs low-segment baseline (populated after agg, used in mart)
         avg(case when engagement_segment = 'Low'
-                then time_to_first_deal end
+                then days_to_first_deal end
         ) over ()                                                    as low_segment_avg_ttd,
 
         -- Revenue baselines
